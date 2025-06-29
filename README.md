@@ -1,42 +1,64 @@
 # 🚀 LLM Inference Optimization with TensorRT + Triton
 
-> **Latency-optimized LLM deployment pipeline with FP16/INT8 execution, ONNX conversion, CUDA profiling, and production-grade serving.**
+> **End-to-end deployment of Transformer-based LLMs with INT8 quantization, CUDA-level profiling, and production-grade Triton serving pipeline.**
 
 ---
 
-## 📌 Project Overview
+## 📌 Overview
 
-This project demonstrates a full-stack approach to deploying a Transformer-based LLM using the tools and optimizations used by production teams at NVIDIA, Meta, Amazon, and OpenAI. It includes:
+This project showcases a production-oriented LLM inference pipeline, integrating key optimizations used by real-world teams at NVIDIA, Meta, Amazon, and OpenAI. It includes:
 
-- ✅ Model export from Hugging Face to ONNX  
-- ✅ INT8 quantization using QDQ format and calibration datasets  
-- ✅ TensorRT engine conversion and runtime profiling  
-- ✅ NVTX annotations and CUDA kernel-level analysis with Nsight Systems (`nsys`)  
-- ✅ LLM serving using Triton Inference Server  
-- ✅ Throughput + latency benchmarking using `perf_analyzer`
+- ✅ Hugging Face → ONNX model export with dynamic axis support
+- ✅ INT8 quantization via QDQ format and calibration dataset
+- ✅ TensorRT engine build + performance benchmarking
+- ✅ Kernel-level analysis with Nsight Systems (nsys) and NVTX annotations
+- ✅ Scalable inference serving with Triton Inference Server
+- ✅ Real throughput and latency benchmarking using perf_analyzer
 
-> 🔍 **Goal**: Cut latency, preserve accuracy, and scale inference using real-world tooling.
-- Serve Hugging Face LLMs using optimized inference
-- Use FP16 and INT8 for latency/throughput wins
-- Debug with CUDA profiling tools
-- Benchmark and deploy with industry-grade infra
+> 🎯 **Objective**: Maximize inference speed while preserving accuracy and enabling deployment scalability.
 
 ---
 
-## 🧠 Why This Project Matters
+## 💡 Why This Project Matters
 
-Modern LLM inference systems must handle streaming, batch scheduling, memory constraints, and latency targets. This repo shows:
+Modern LLM inference faces growing challenges: high latency, memory bottlenecks, and limited scalability. This project addresses these by:
 
-- How to move from **PyTorch → ONNX → TensorRT**
-- How to avoid common quantization traps (e.g. accuracy drops, fallback to FP32)
-- How to use **CUDA profiling tools to eliminate bottlenecks**
-- How to serve LLMs at scale using **Triton Inference Server**
+- Demonstrating a full pipeline: PyTorch → ONNX → TensorRT → Triton
+- Diagnosing and mitigating quantization-induced accuracy drops
+- Using Nsight Systems + NVTX for deep CUDA visibility
+- Leveraging Triton's batching and concurrent stream support for deployment
 
-> ⚡️ This repo shows how to optimize production-grade LLM inference pipelines 
+> ⚡️ A hands-on, real-world implementation of the techniques powering today’s most efficient AI systems.
 
 ---
 
-## 🧱 System Architecture
+## 🔧 Key Features
+
+### ✳️  ONNX Export + INT8 Quantization
+- Model exported with dynamic shapes via optimum.exporters.onnx
+- INT8 quantization using QDQ + calibration dataset
+- Layer-level override to mitigate quality degradation
+
+### ✳️  TensorRT Engine Optimization
+- Uses both trtexec and Python API for engine builds
+- Compares FP32 / FP16 / INT8 performance
+- Workspace tuning, layer fusion, and dynamic batch support
+
+### ✳️  CUDA Profiling & Bottleneck Detection
+- Deep dive via nsys timeline + NVTX annotations
+- Identifies:
+  - cudaMemcpyAsync latency
+  - Kernel launch delays
+  - Underutilized GPU streams
+
+### ✳️  Triton Inference Server Deployment
+- Configured model_repository for dynamic input, batching
+- Python client for benchmarking
+- Production-style API interface (HTTP/gRPC)
+
+---
+
+## 🧱 Architecture Diagram
 
 ```plaintext
 [ Hugging Face Model ]
@@ -50,124 +72,100 @@ Modern LLM inference systems must handle streaming, batch scheduling, memory con
     [ HTTP/gRPC Inference ]
 ```
 
-> Profiling tools (nsys, nvtx) are used to measure and tune each stage.
+> Each step is profiled, visualized, and tuned using NVIDIA’s recommended tooling.
 
 ---
 
-## 🔧 Features and Highlights
-
-### ✅ Export + Quantize
-- Uses `optimum.exporters.onnx` to preserve dynamic axes  
-- Quantization using QDQ format with calibration dataset  
-- Debugs accuracy drop via per-layer override + calibration refinement
-
-### ✅ Optimize with TensorRT
-- Converts ONNX to TensorRT with `trtexec` and Python API  
-- Enables workspace tuning and layer fusion  
-- Benchmarks FP16 vs INT8 engine performance
-
-### ✅ CUDA Profiling
-- `nsys` timeline + NVTX annotations to analyze:
-  - Memory copy latency  
-  - Kernel launch delay  
-  - Stream overlap and utilization
-
-### ✅ Deploy with Triton
-- Runs optimized engine in `model_repository/`  
-- Supports batching, dynamic input sizes, Python client  
-- Benchmarked using `perf_analyzer`
-
----
-
-## 📁 Key Files and Directories
+## 📁 Project Structure
 
 ```bash
 convert/
-    export_onnx.py            # Converts Hugging Face → ONNX
-    quantize_model.py         # Applies QDQ + calibration
+    export_onnx.py            # Hugging Face → ONNX
+    quantize_model.py         # QDQ quantization
 optimize/
-    build_trt_engine.py       # TensorRT engine builder
-    trtexec_command.sh        # FP16/INT8 CLI conversion
+    build_trt_engine.py       # FP16/INT8 engine conversion
+    trtexec_command.sh
 serve/
-    model_repository/         # Triton model folder
+    model_repository/         # Triton model setup
     run_triton.sh             # Launch Triton Server
-    client/infer_client.py    # Sends inference requests
+    client/infer_client.py    # Python client for inference
 profile/
-    run_nsys_profile.py       # NVTX + Nsight tracing
+    run_nsys_profile.py       # NVTX + Nsight Systems profiling
 notebooks/
-    latency_analysis.ipynb    # Profiling + performance graphs
+    latency_analysis.ipynb    # Performance plots
 diagrams/
     pipeline_architecture.png # Inference system diagram
 ```
 
 ---
 
-## 🚀 How to Run
+## 🚀 Quickstart
 
 ```bash
 # 1. Export model to ONNX
 python convert/export_onnx.py
 
-# 2. Quantize to INT8 (optional)
+# 2. Apply INT8 Quantization (optional)
 python convert/quantize_model.py
 
-# 3. Optimize with TensorRT
+# 3. Build Engine with TensorRT
 bash optimize/trtexec_command.sh
 
-# 4. Launch Triton
+# 4. Launch Triton Server
 bash serve/run_triton.sh
 
-# 5. Send inference requests
+# 5. Run Inference via Client
 python serve/client/infer_client.py
 
-# 6. Profile with Nsight
+# 6. Run Nsight Profiling
 python profile/run_nsys_profile.py
 ```
 
 ---
 
-## 📉 Before vs After Optimization (Planned)
+## 📉 Results (In Progress)
 
-| Version          | Latency (ms) | Throughput (req/s) |
+| Engine Type      | Latency (ms) | Throughput (req/s) |
 |------------------|--------------|--------------------|
-| PyTorch baseline | TBD          | TBD                |
+| PyTorch Baseline | TBD          | TBD                |
 | ONNX (FP32)      | TBD          | TBD                |
 | TensorRT (FP16)  | TBD          | TBD                |
 | TensorRT (INT8)  | TBD          | TBD                |
 
-_🚧 Benchmarking in progress. Results coming soon._
+> Final benchmarks will include token throughput, memory footprint, and profiling overlays.
 
 ---
 
-## 📊 Results + Insights
+## Insights & Debug Notes
 
-- INT8 inference expects to deliver ~3x throughput vs PyTorch baseline
+- NVTX tracing revealed kernel-streaming bottlenecks in memory ops
 
-- NVTX profiling revealed cudaMemcpyAsync bottlenecks, fixed via pinned memory
+- INT8 quality loss was mitigated by per-layer selective dequantization
 
-- Accuracy loss from quantization mitigated via selective precision override
+- Triton's dynamic batching is expected to improve throughput by ~40% without latency cost
 
-- Triton dynamic batching improved throughput by expecting 40% with no latency trade-off
+- PyTorch to ONNX export required careful handling of dynamic axes
 
 ---
 
-## 🧠 Key Learnings
+## 🧠 Key Takeaways
 
-- Dynamic axes misrepresentation can cause FP32/CPU fallback in TensorRT
+- Understanding where latency comes from (e.g., memcpy, shape inference, fallback to FP32) is key to optimizing inference.
 
-- Nsight Systems + NVTX provide GPU visibility that can't be guessed
+- CUDA profiling with Nsight is non-optional when deploying real-time LLMs.
 
-- QDQ quantization requires per-layer tuning to avoid quality drop
-
-- Triton simplifies serving + auto-batching for production workloads
+- Triton makes scalable, production-grade LLM inference practical and maintainable.
 
 ---
 
 ## 🤝 Open to Connect
 
-If you're building for LLM inference infrastructure or working on cutting-edge model optimization, I’d love to connect and learn more.
+If you're building high-performance LLM inference infra or interested in discussing deployment tools, let's connect.
 
 💻 **GitHub**: [github.com/eric-wong-llm](https://github.com/eric-wong-llm)
+🔗 Open to feedback and collaboration!
+
+---
 
 ## 🔗 References
 
