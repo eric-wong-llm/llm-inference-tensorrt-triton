@@ -38,6 +38,7 @@ Modern LLM inference systems must handle streaming, batch scheduling, memory con
 
 ## 🧱 System Architecture
 
+```plaintext
 [ Hugging Face Model ]
           ↓ (export)
       [ ONNX Format ]
@@ -47,6 +48,7 @@ Modern LLM inference systems must handle streaming, batch scheduling, memory con
 [ Triton Inference Server ]
           ↓ (client)
     [ HTTP/gRPC Inference ]
+```
 
 > Profiling tools (nsys, nvtx) are used to measure and tune each stage.
 
@@ -79,6 +81,7 @@ Modern LLM inference systems must handle streaming, batch scheduling, memory con
 
 ## 📁 Key Files and Directories
 
+```bash
 convert/
     export_onnx.py            # Converts Hugging Face → ONNX
     quantize_model.py         # Applies QDQ + calibration
@@ -95,27 +98,28 @@ notebooks/
     latency_analysis.ipynb    # Profiling + performance graphs
 diagrams/
     pipeline_architecture.png # Inference system diagram
+```
 
 ---
 
 ## 🚀 How to Run
 
-# 1. Export model to ONNX
+1. Export model to ONNX
 python convert/export_onnx.py
 
-# 2. Quantize to INT8 (optional)
+2. Quantize to INT8 (optional)
 python convert/quantize_model.py
 
-# 3. Optimize with TensorRT
+3. Optimize with TensorRT
 bash optimize/trtexec_command.sh
 
-# 4. Launch Triton
+4. Launch Triton
 bash serve/run_triton.sh
 
-# 5. Send inference requests
+5. Send inference requests
 python serve/client/infer_client.py
 
-# 6. Profile with Nsight
+6. Profile with Nsight
 python profile/run_nsys_profile.py
 
 ---
