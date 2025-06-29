@@ -104,23 +104,25 @@ diagrams/
 
 ## 🚀 How to Run
 
-1. Export model to ONNX
+```bash
+# 1. Export model to ONNX
 python convert/export_onnx.py
 
-2. Quantize to INT8 (optional)
+# 2. Quantize to INT8 (optional)
 python convert/quantize_model.py
 
-3. Optimize with TensorRT
+# 3. Optimize with TensorRT
 bash optimize/trtexec_command.sh
 
-4. Launch Triton
+# 4. Launch Triton
 bash serve/run_triton.sh
 
-5. Send inference requests
+# 5. Send inference requests
 python serve/client/infer_client.py
 
-6. Profile with Nsight
+# 6. Profile with Nsight
 python profile/run_nsys_profile.py
+```
 
 ---
 
