@@ -170,7 +170,8 @@ If you're building for LLM inference infrastructure or working on cutting-edge m
 💻 **GitHub**: [github.com/eric-wong-llm](https://github.com/eric-wong-llm)
 
 ## 🔗 References
-- TensorRT Documentation
-- Triton Inference Server
-- Hugging Face Optimum
-- Nsight Systems
+
+- [TensorRT Documentation](https://docs.nvidia.com/deeplearning/tensorrt/)
+- [Triton Inference Server](https://github.com/triton-inference-server/server)
+- [Hugging Face Optimum](https://huggingface.co/docs/optimum/index)
+- [Nsight Systems](https://developer.nvidia.com/nsight-systems)
