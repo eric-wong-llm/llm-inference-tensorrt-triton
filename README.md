@@ -38,7 +38,6 @@ Modern LLM inference systems must handle streaming, batch scheduling, memory con
 
 ## 🧱 System Architecture
 
-```plaintext
 [ Hugging Face Model ]
           ↓ (export)
       [ ONNX Format ]
