@@ -95,6 +95,8 @@ notebooks/
     latency_analysis.ipynb    # Performance plots
 diagrams/
     pipeline_architecture.png # Inference system diagram
+
+Note: `.onnx` and `.plan` model files are excluded from the repo due to size. Please run `convert/export_onnx.py` and `optimize/trtexec_command.sh` to regenerate them.
 ```
 
 ---
@@ -136,7 +138,7 @@ python profile/run_nsys_profile.py
 
 ---
 
-## Insights & Debug Notes
+## 🔍 Insights & Debug Notes
 
 - NVTX tracing revealed kernel-streaming bottlenecks in memory ops
 

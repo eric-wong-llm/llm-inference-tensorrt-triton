@@ -1,0 +1,37 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# ONNX and TensorRT artifacts
+*.onnx
+*.plan
+
+# Checkpoints / large model files
+*.ckpt
+*.pt
+*.safetensors
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Logs and outputs
+*.log
+
+# Environment variables
+.env
+
+# macOS and system files
+.DS_Store
+
+# VS Code and IDE settings
+.vscode/
+.idea/
+
+# Python virtual environments
+venv/
+env/
+
+# Temporary files
+*.tmp
+*.swp

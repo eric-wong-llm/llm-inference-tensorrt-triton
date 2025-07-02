@@ -1,0 +1,32 @@
+name: "gpt2_trt"
+platform: "tensorrt_plan"
+max_batch_size: 8
+
+input [
+  {
+    name: "input_ids"
+    data_type: TYPE_INT32
+    dims: [ -1 ]  # dynamic sequence length
+  },
+  {
+    name: "attention_mask"
+    data_type: TYPE_INT32
+    dims: [ -1 ]  # dynamic sequence length
+  }
+]
+
+output [
+  {
+    name: "logits"
+    data_type: TYPE_FP32  # Change to TYPE_FP16 if using FP16 engine
+    dims: [ -1, 50257 ]      # [batch_size, sequence_length, vocab_size]
+  }
+]
+
+instance_group [
+  {
+    kind: KIND_GPU
+    count: 1
+  }
+]
+
