@@ -1,2 +1,18 @@
-pip3 install tritonclient[all]
+# Core packages
+torch
+transformers
+numpy
+onnx
+onnxruntime
+
+# NVIDIA-specific
+nvidia-pyindex
+nvidia-tensorrt
+tritonclient[all]
+
+# Optional (recommended for development and debugging)
+tqdm
+ipython
+matplotlib
+psutil
 
